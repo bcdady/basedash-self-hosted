@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ .Release.Name }}-certbot'
+  labels:
+    katenary.io/component: certbot
+    katenary.io/project: '{{ .Chart.Name }}'
+    katenary.io/release: '{{ .Release.Name }}'
+  annotations:
+    katenary.io/docker-compose-sha1: 68f605431a7d36e10137c004d91785087946b59b
+    katenary.io/version: 2.0.0-beta2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      katenary.io/component: certbot
+      katenary.io/release: '{{ .Release.Name }}'
+  template:
+    metadata:
+      labels:
+        katenary.io/component: certbot
+        katenary.io/release: '{{ .Release.Name }}'
+    spec:
+      initContainers:
+        - name: check-nginx
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |-
+              OK=0
+              echo "Checking nginx port"
+              while [ $OK != 1 ]; do
+                  echo -n "."
+                  nc -z {{ .Release.Name }}-nginx 80 2>&1 >/dev/null && OK=1 || sleep 1
+              done
+              echo
+              echo "Done"
+      containers:
+        - name: certbot
+          image: '{{ .Values.certbot.repository.image }}{{ if ne .Values.certbot.repository.tag "" }}:{{ .Values.certbot.repository.tag }}{{ end }}'
+          command:
+            - certonly
+            - --webroot
+            - --webroot-path=/var/www/html
+            - --email
+            - your-email@domain.com
+            - --agree-tos
+            - --no-eff-email
+            - --staging
+            - -d
+            - basedash.fm
+          volumeMounts:
+            - mountPath: /etc/letsencrypt
+              name: certbotetc
+            - mountPath: /var/www/certbot
+              name: certbotvar
+            - mountPath: /var/www/html
+              name: webroot
+      volumes:
+        - name: certbotetc
+          {{- if  .Values.certbot.persistence.certbotetc.enabled }}
+          persistentVolumeClaim:
+            claimName: '{{ .Release.Name }}-certbotetc'
+          {{ else }}
+          emptyDir: {}
+          {{- end }}
+        - name: certbotvar
+          {{- if  .Values.certbot.persistence.certbotvar.enabled }}
+          persistentVolumeClaim:
+            claimName: '{{ .Release.Name }}-certbotvar'
+          {{ else }}
+          emptyDir: {}
+          {{- end }}
+        - name: webroot
+          {{- if  .Values.certbot.persistence.webroot.enabled }}
+          persistentVolumeClaim:
+            claimName: '{{ .Release.Name }}-webroot'
+          {{ else }}
+          emptyDir: {}
+          {{- end }}
+

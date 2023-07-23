@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ .Release.Name }}-rabbitmq'
+  labels:
+    katenary.io/component: rabbitmq
+    katenary.io/project: '{{ .Chart.Name }}'
+    katenary.io/release: '{{ .Release.Name }}'
+  annotations:
+    katenary.io/docker-compose-sha1: 68f605431a7d36e10137c004d91785087946b59b
+    katenary.io/version: 2.0.0-beta2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      katenary.io/component: rabbitmq
+      katenary.io/release: '{{ .Release.Name }}'
+  template:
+    metadata:
+      labels:
+        katenary.io/component: rabbitmq
+        katenary.io/release: '{{ .Release.Name }}'
+    spec:
+      containers:
+        - name: rabbitmq
+          image: '{{ .Values.rabbitmq.repository.image }}{{ if ne .Values.rabbitmq.repository.tag "" }}:{{ .Values.rabbitmq.repository.tag }}{{ end }}'
+          ports:
+            - name: rabbitmq
+              containerPort: 5672
+            - name: rabbitmq-15672
+              containerPort: 15672
+          volumeMounts:
+            - mountPath: /var/lib/rabbitmq
+              name: rabbitmqdata
+            - mountPath: /var/log/rabbitmq
+              name: rabbitmqlogs
+          livenessProbe:
+            exec:
+              command:
+                - rabbitmq-diagnostics -q ping
+            periodSeconds: 30
+            initialDelaySeconds: 0
+            successThreshold: 1
+            failureThreshold: 3
+      volumes:
+        - name: rabbitmqdata
+          {{- if  .Values.rabbitmq.persistence.rabbitmqdata.enabled }}
+          persistentVolumeClaim:
+            claimName: '{{ .Release.Name }}-rabbitmqdata'
+          {{ else }}
+          emptyDir: {}
+          {{- end }}
+        - name: rabbitmqlogs
+          {{- if  .Values.rabbitmq.persistence.rabbitmqlogs.enabled }}
+          persistentVolumeClaim:
+            claimName: '{{ .Release.Name }}-rabbitmqlogs'
+          {{ else }}
+          emptyDir: {}
+          {{- end }}
+

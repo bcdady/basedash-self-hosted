@@ -1,0 +1,102 @@
+app:
+  environment:
+    AUTHY_API_KEY: ""
+    AWS_ACCESS_KEY_ID: ""
+    AWS_SECRET_ACCESS_KEY: ""
+    BASE_URL: ""
+    BASEDASH_LICENSE_KEY: ""
+    BUCKET_ENDPOINT: https://s3.us-east-2.amazonaws.com
+    BUCKET_NAME: ""
+    BUCKET_NAME_IMAGES: ""
+    BUCKET_NAME_KEYS: ""
+    CRYPTO_KEY: omHadn4YCLOL4ZHFamDILFi0bfceVbgz
+    GOOGLE_OAUTH_CLIENT_ID: ""
+    JWT_KEY: Z3jhFlpl61pZNMBF0vVXh1UZ6cVywVWg468j[DN[4]keIUCuHiZzN31eNnn5XFXePBlGgGCmV8clWm4LeIUUXDrewDKQeUrk[ynSWWIq595M5yZ2mvl8Fi2Qb]dgYy0u1PKUhXuwlY1P6HzH]1I[qgOx1gG35phQrUagoVSu1jfyH[K6pQ]vpPAZPO1iSJNaXfWca0XTjgcSo[am9PZUSv5D1xzgBgOsRVTrm[f19VqDbnBkdvcMfXRz3Uk72cX[
+    NODE_ENV: production
+    POSTGRES_DB: basedash
+    POSTGRES_HOST: db
+    POSTGRES_PASSWORD: 6pDFnsqV0nnbZn[H7Gll0TPbDCCRfQSTUMzL]gO9bEdXk1ANJFcsbU2fEYbbTl4h
+    POSTGRES_PORT: "5432"
+    POSTGRES_USER: postgres
+    RABBITMQ_URL: amqp://rabbitmq:5672
+    RESEND_API_KEY: ""
+    SELF_HOSTED: "true"
+    SLACK_CLIENT_ID: ""
+    SLACK_CLIENT_SECRET: ""
+  repository:
+    image: basedash/basedash
+    tag: ""
+certbot:
+  persistence:
+    certbotetc:
+      capacity: 1Gi
+      enabled: false
+    certbotvar:
+      capacity: 1Gi
+      enabled: false
+    webroot:
+      capacity: 1Gi
+      enabled: false
+  repository:
+    image: certbot/certbot
+    tag: ""
+db:
+  environment:
+    AUTHY_API_KEY: ""
+    AWS_ACCESS_KEY_ID: ""
+    AWS_SECRET_ACCESS_KEY: ""
+    BASE_URL: ""
+    BASEDASH_LICENSE_KEY: ""
+    BUCKET_ENDPOINT: https://s3.us-east-2.amazonaws.com
+    BUCKET_NAME: ""
+    BUCKET_NAME_IMAGES: ""
+    BUCKET_NAME_KEYS: ""
+    CRYPTO_KEY: omHadn4YCLOL4ZHFamDILFi0bfceVbgz
+    GOOGLE_OAUTH_CLIENT_ID: ""
+    JWT_KEY: Z3jhFlpl61pZNMBF0vVXh1UZ6cVywVWg468j[DN[4]keIUCuHiZzN31eNnn5XFXePBlGgGCmV8clWm4LeIUUXDrewDKQeUrk[ynSWWIq595M5yZ2mvl8Fi2Qb]dgYy0u1PKUhXuwlY1P6HzH]1I[qgOx1gG35phQrUagoVSu1jfyH[K6pQ]vpPAZPO1iSJNaXfWca0XTjgcSo[am9PZUSv5D1xzgBgOsRVTrm[f19VqDbnBkdvcMfXRz3Uk72cX[
+    NODE_ENV: production
+    POSTGRES_DB: basedash
+    POSTGRES_HOST: db
+    POSTGRES_PASSWORD: 6pDFnsqV0nnbZn[H7Gll0TPbDCCRfQSTUMzL]gO9bEdXk1ANJFcsbU2fEYbbTl4h
+    POSTGRES_PORT: "5432"
+    POSTGRES_USER: postgres
+    RABBITMQ_URL: amqp://rabbitmq:5672
+    RESEND_API_KEY: ""
+    SELF_HOSTED: "true"
+    SLACK_CLIENT_ID: ""
+    SLACK_CLIENT_SECRET: ""
+  persistence:
+    db:
+      capacity: 1Gi
+      enabled: false
+  repository:
+    image: postgres
+    tag: "12.2"
+nginx:
+  persistence:
+    certbotetc:
+      capacity: 1Gi
+      enabled: false
+    certbotvar:
+      capacity: 1Gi
+      enabled: false
+    dhparam:
+      capacity: 1Gi
+      enabled: false
+    webroot:
+      capacity: 1Gi
+      enabled: false
+  repository:
+    image: nginx
+    tag: mainline-alpine
+rabbitmq:
+  persistence:
+    rabbitmqdata:
+      capacity: 1Gi
+      enabled: false
+    rabbitmqlogs:
+      capacity: 1Gi
+      enabled: false
+  repository:
+    image: rabbitmq
+    tag: 3.8-management-alpine

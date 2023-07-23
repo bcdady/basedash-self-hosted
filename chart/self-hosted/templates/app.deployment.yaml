@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ .Release.Name }}-app'
+  labels:
+    katenary.io/component: app
+    katenary.io/project: '{{ .Chart.Name }}'
+    katenary.io/release: '{{ .Release.Name }}'
+  annotations:
+    katenary.io/docker-compose-sha1: 68f605431a7d36e10137c004d91785087946b59b
+    katenary.io/version: 2.0.0-beta2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      katenary.io/component: app
+      katenary.io/release: '{{ .Release.Name }}'
+  template:
+    metadata:
+      labels:
+        katenary.io/component: app
+        katenary.io/release: '{{ .Release.Name }}'
+    spec:
+      initContainers:
+        - name: check-db
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |-
+              OK=0
+              echo "Checking db port"
+              while [ $OK != 1 ]; do
+                  echo -n "."
+                  nc -z {{ .Release.Name }}-db 5432 2>&1 >/dev/null && OK=1 || sleep 1
+              done
+              echo
+              echo "Done"
+        - name: check-rabbitmq
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |-
+              OK=0
+              echo "Checking rabbitmq port"
+              while [ $OK != 1 ]; do
+                  echo -n "."
+                  nc -z {{ .Release.Name }}-rabbitmq 5672 2>&1 >/dev/null && OK=1 || sleep 1
+              done
+              echo
+              echo "Done"
+      containers:
+        - name: app
+          image: '{{ .Values.app.repository.image }}{{ if ne .Values.app.repository.tag "" }}:{{ .Values.app.repository.tag }}{{ end }}'
+          ports:
+            - name: app
+              containerPort: 5555
+          envFrom:
+            - configMapRef:
+                name: '{{ .Release.Name }}-app'
+

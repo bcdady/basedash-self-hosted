@@ -1,0 +1,8 @@
+# Create on 2023-07-23T16:45:31-06:00
+# Katenary command line: katenary convert
+apiVersion: v2
+appVersion: main-da71164
+description: A helm chart for Basedash
+name: Basedash
+type: application
+version: 0.1.0

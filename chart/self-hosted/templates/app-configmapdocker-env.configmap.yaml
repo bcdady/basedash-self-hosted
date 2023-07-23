@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: '{{ .Release.Name }}-app'
+  labels:
+    katenary.io/component: app
+    katenary.io/path: ./docker.env
+    katenary.io/project: '{{ .Chart.Name }}'
+    katenary.io/release: '{{ .Release.Name }}'
+  annotations:
+    katenary.io/docker-compose-sha1: 68f605431a7d36e10137c004d91785087946b59b
+    katenary.io/version: 2.0.0-beta2
+data:
+  AUTHY_API_KEY: ""
+  AWS_ACCESS_KEY_ID: ""
+  AWS_SECRET_ACCESS_KEY: ""
+  BASE_URL: ""
+  BASEDASH_LICENSE_KEY: ""
+  BUCKET_ENDPOINT: https://s3.us-east-2.amazonaws.com
+  BUCKET_NAME: ""
+  BUCKET_NAME_IMAGES: ""
+  BUCKET_NAME_KEYS: ""
+  CRYPTO_KEY: omHadn4YCLOL4ZHFamDILFi0bfceVbgz
+  GOOGLE_OAUTH_CLIENT_ID: ""
+  JWT_KEY: Z3jhFlpl61pZNMBF0vVXh1UZ6cVywVWg468j[DN[4]keIUCuHiZzN31eNnn5XFXePBlGgGCmV8clWm4LeIUUXDrewDKQeUrk[ynSWWIq595M5yZ2mvl8Fi2Qb]dgYy0u1PKUhXuwlY1P6HzH]1I[qgOx1gG35phQrUagoVSu1jfyH[K6pQ]vpPAZPO1iSJNaXfWca0XTjgcSo[am9PZUSv5D1xzgBgOsRVTrm[f19VqDbnBkdvcMfXRz3Uk72cX[
+  NODE_ENV: production
+  POSTGRES_DB: basedash
+  POSTGRES_HOST: db
+  POSTGRES_PASSWORD: 6pDFnsqV0nnbZn[H7Gll0TPbDCCRfQSTUMzL]gO9bEdXk1ANJFcsbU2fEYbbTl4h
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: postgres
+  RABBITMQ_URL: amqp://rabbitmq:5672
+  RESEND_API_KEY: ""
+  SELF_HOSTED: "true"
+  SLACK_CLIENT_ID: ""
+  SLACK_CLIENT_SECRET: ""
